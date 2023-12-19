@@ -82,35 +82,31 @@ const displayMovements = function (movements) {
 displayMovements(account1.movements);
 
 // Setting the balance (saldo)
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, movement) => acc + movement, 0);
-  labelBalance.textContent = `${balance} €`;
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, movement) => acc + movement, 0);
+  labelBalance.textContent = `${acc.balance}€`;
 };
-calcDisplayBalance(account1.movements); // calling function to show balance
-
 // setting the summary (incomes, outcomes and interest)
-const calcDisplaySum = function (movements) {
-  const incomes = movements
+const calcDisplaySum = function (acc) {
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((val, mov) => val + mov, 0);
   labelSumIn.textContent = `${incomes} €`;
 
-  const outcomes = movements
+  const outcomes = acc.movements
     .filter(mov => mov < 0)
     .reduce((val, mov) => val + mov, 0);
   labelSumOut.textContent = `${Math.abs(outcomes)} €`;
 
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0) // filtering positive values
-    .map(deposit => (deposit + 1.2) / 100)
+    .map(deposit => (deposit * acc.interestRate) / 100)
     .filter((int, i, arr) => {
       return i >= 1;
     }) // applying interest rate
     .reduce((val, int) => val + int, 0);
   labelSumInterest.textContent = `${interest} €`;
-  // console.log(interest);
 };
-calcDisplaySum(account1.movements);
 const createUserNames = function (accs) {
   // adding a new key (username) in each account object, consisting of their name initials
   accs.forEach(function (acc) {
@@ -124,25 +120,61 @@ const createUserNames = function (accs) {
 // joining all the initials
 
 createUserNames(accounts);
-console.log(accounts);
+
+const updateUI = function (acc) {
+  // display - update account settings (movements, balance, etc)
+  displayMovements(acc.movements);
+  calcDisplayBalance(acc);
+  calcDisplaySum(acc);
+};
 
 /////////////////////////////////////////////////
+// Login Event Handler
+let currentAccount;
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  // password
+  if (currentAccount && currentAccount.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome, ${currentAccount.owner}.`;
+  }
+  containerApp.computedStyleMap.opacity = 100;
+
+  // clearing input data
+  inputLoginUsername.value = inputLoginPin.value = '';
+  inputClosePin.blur();
+
+  updateUI(currentAccount);
+});
 /////////////////////////////////////////////////
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
+// Implementing transfers: start by adding eventListener on the 'formbtnTransfer element
+btnTransfer.addEventListener('click', function (e) {
+  // add preventDefault, declare a variable that stores transfer amount value, and other variable to the account receiver, pointed with .find method
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const accReceiver = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
 
-/*
- */
-//--------------Learning the find() method
+  inputTransferAmount.value = inputTransferTo.value = '';
+  console.log(currentAccount.movements, accReceiver.movements);
+  if (
+    currentAccount.balance >= amount &&
+    accReceiver &&
+    amount > 0 &&
+    currentAccount?.username !== accReceiver.username
+  ) {
+    currentAccount.movements.push(-amount);
+    accReceiver.movements.push(amount);
+    // updating interface
+    updateUI(currentAccount);
 
-console.log(accounts);
-const accountFound = accounts.find(acc => acc.owner === 'Rogerio Castro Filho');
-console.log(accountFound);
-// finding the first deposit
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-const depositFound = movements.find(mov => mov > 0);
-console.log(depositFound);
+    console.log('Transferência realizada');
+  } else {
+    console.log('Transferência falhou');
+  }
+});
+// Valor da transferência > tirar da conta do depositante e adicionar na conta do depositário
