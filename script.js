@@ -172,9 +172,27 @@ btnTransfer.addEventListener('click', function (e) {
     // updating interface
     updateUI(currentAccount);
 
-    console.log('Transferência realizada');
-  } else {
-    console.log('Transferência falhou');
+    // Valor da transferência > tirar da conta do depositante e adicionar na conta do depositário
   }
 });
-// Valor da transferência > tirar da conta do depositante e adicionar na conta do depositário
+// Implementing option to close account
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === Number(inputClosePin.value)
+  ) {
+    console.log('Botão de fechar conta');
+    // delete current account using slice method
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+    console.log(index);
+    inputCloseUsername.value = inputClosePin.value = '';
+
+    accounts.splice(index, 1);
+    // uma vez que a conta for removida, a interface desaparece:
+    containerApp.style.opacity = 0;
+  }
+});
