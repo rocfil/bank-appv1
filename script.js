@@ -4,29 +4,29 @@
 
 // Data
 const account1 = {
-  owner: 'Rogerio Castro Filho',
+  owner: 'Bilbo Baggins',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
 };
 
 const account2 = {
-  owner: 'Joaquina Davis',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  owner: 'Neymar Junior',
+  movements: [51000, 7400, -150, -790, -3210, -1000, 82500, -30],
   interestRate: 1.5,
   pin: 2222,
 };
 
 const account3 = {
-  owner: 'Sebastiao Thomas Walmir',
+  owner: 'Frodo Baggins',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
 };
 
 const account4 = {
-  owner: 'Sara Susi',
-  movements: [430, 1000, 700, 50, 90],
+  owner: 'Susi Britney',
+  movements: [430, 1000, 700, 50, 90, -210, 2200],
   interestRate: 1,
   pin: 4444,
 };
@@ -61,9 +61,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 // creating a function that displays the movements in user interface - displayMovements, using forEach method (movement, index). Inside it, place the html set that represents movements__row, and reinsert the movements
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -141,7 +144,7 @@ btnLogin.addEventListener('click', function (e) {
   if (currentAccount && currentAccount.pin === Number(inputLoginPin.value)) {
     labelWelcome.textContent = `Welcome, ${currentAccount.owner}.`;
   }
-  containerApp.computedStyleMap.opacity = 100;
+  containerApp.style.opacity = 100;
 
   // clearing input data
   inputLoginUsername.value = inputLoginPin.value = '';
@@ -194,5 +197,31 @@ btnClose.addEventListener('click', function (e) {
     accounts.splice(index, 1);
     // uma vez que a conta for removida, a interface desaparece:
     containerApp.style.opacity = 0;
+
+    labelWelcome.innerHTML = 'Your account has been closed';
+    labelWelcome.style.color = 'red';
   }
+});
+// Request loan (solicitar empréstimo)
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  // condicional - se alguma movimentação for maior ou igual a 10% do valor solicitado
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // adicionar a movimentação e atualizar UI com o valor solicitado
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
+// implementing the Sort button
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
