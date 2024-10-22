@@ -4,7 +4,7 @@ first commit from 08-dec-2023 undone
 
 -----------------HOW TO USE myBankSimulator-----------------
 
-Thank you for testing my project. This one was made while I studied a Javascript course lectured by Jonas Jonas Schmedtmann. Please check his udemy page here: https://www.udemy.com/user/jonasschmedtmann/
+Thank you for testing my project. This one was made while I studied a Javascript course lectured by Jonas Schmedtmann. Please check his lessons here: https://www.udemy.com/user/jonasschmedtmann/
 
 About this app, there are four different accounts from different hypotetic owners. Check their login data so you can test the app properly. With the following data you can login and make money transfers between the existing accounts, as well as close them through the app. To reset, just update the page.
 Owner #1:
