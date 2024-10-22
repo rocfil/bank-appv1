@@ -12,7 +12,7 @@ const account1 = {
 
 const account2 = {
   owner: 'Neymar Junior',
-  movements: [51000, 7400, -150, -790, -3210, -1000, 82500, -30],
+  movements: [51000, 7400, -150, -790, -3210, -1000, 825100, -30],
   interestRate: 1.5,
   pin: 2222,
 };
@@ -164,6 +164,7 @@ btnTransfer.addEventListener('click', function (e) {
 
   inputTransferAmount.value = inputTransferTo.value = '';
   console.log(currentAccount.movements, accReceiver.movements);
+
   if (
     currentAccount.balance >= amount &&
     accReceiver &&
