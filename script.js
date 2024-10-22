@@ -161,7 +161,6 @@ btnTransfer.addEventListener('click', function (e) {
   const accReceiver = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
-
   inputTransferAmount.value = inputTransferTo.value = '';
   console.log(currentAccount.movements, accReceiver.movements);
 
@@ -178,6 +177,7 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Valor da transferência > tirar da conta do depositante e adicionar na conta do depositário
   }
+  alert('transfer sent to ' + accReceiver.owner);
 });
 // Implementing option to close account
 btnClose.addEventListener('click', function (e) {
