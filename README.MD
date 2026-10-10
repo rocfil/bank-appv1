@@ -23,3 +23,5 @@ password: 3333
 Owner #4:
 name: Susi Britney (login sb)
 password: 4444
+
+Deployed app: https://bank-appv1.vercel.app/
